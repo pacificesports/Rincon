@@ -80,7 +80,7 @@ func RegisterSelf() {
 	var ContainerAppEnvDNSSuffix = os.Getenv("CONTAINER_APP_ENV_DNS_SUFFIX")
 	if ContainerAppEnvDNSSuffix != "" {
 		utils.SugarLogger.Infoln("Found Azure Container App environment variables, using internal DNS suffix: " + ContainerAppEnvDNSSuffix)
-		s.URL = "http://rincon.internal" + ContainerAppEnvDNSSuffix
+		s.URL = "http://rincon.internal." + ContainerAppEnvDNSSuffix
 	}
 	config.Service, _ = service.CreateService(s)
 	// Register routes with service
