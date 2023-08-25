@@ -83,6 +83,6 @@ func SendStatusLog(service model.Service, status bool) {
 	}
 	go Discord.ChannelMessageSendEmbed(config.DiscordChannel, &embed)
 	if !status {
-		go Discord.ChannelMessageSend(config.DiscordChannel, ":fire: :fire: :fire: <@&981503871396511775> service down fuck fuck fuck :fire: :fire: :fire:\nhttps://storkecentral.statuspage.io/")
+		go Discord.ChannelMessageSend(config.DiscordChannel, ":fire: :fire: :fire: <@&1144770098670878721> service down fuck fuck fuck :fire: :fire: :fire:")
 	}
 }
