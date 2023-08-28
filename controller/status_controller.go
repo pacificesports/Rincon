@@ -3,8 +3,6 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	cron "github.com/robfig/cron/v3"
-	"go.opentelemetry.io/otel/attribute"
-	oteltrace "go.opentelemetry.io/otel/trace"
 	"net/http"
 	"rincon/config"
 	"rincon/service"
@@ -13,10 +11,6 @@ import (
 )
 
 func GetAllServiceStatus(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "GetAllServiceStatus", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	returnList := []gin.H{}
 	services := service.GetAllServices()
 	if len(services) == 0 {
@@ -31,10 +25,6 @@ func GetAllServiceStatus(c *gin.Context) {
 }
 
 func GetServiceStatus(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "GetServiceStatus", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	returnList := []gin.H{}
 	services := service.GetServiceByName(c.Param("name"))
 	if len(services) == 0 {

@@ -3,14 +3,19 @@ package config
 import (
 	"os"
 	"rincon/model"
+	"strings"
 )
 
-var Service = model.Service{}
+var Service = model.Service{
+	Name:        os.Getenv("SERVICE_NAME"),
+	StatusEmail: os.Getenv("STATUS_EMAIL"),
+	URL:         "http://" + strings.ToLower(os.Getenv("SERVICE_NAME")) + ":" + Port,
+	Version:     Version,
+}
 
-var Version = "2.1.5"
+var Version = "2.1.6"
 var Env = os.Getenv("ENV")
 var Port = os.Getenv("PORT")
-var JaegerPort = os.Getenv("JAEGER_PORT")
 
 var PostgresHost = os.Getenv("POSTGRES_HOST")
 var PostgresDatabase = os.Getenv("POSTGRES_DATABASE")

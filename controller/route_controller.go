@@ -2,8 +2,6 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"go.opentelemetry.io/otel/attribute"
-	oteltrace "go.opentelemetry.io/otel/trace"
 	"math/rand"
 	"net/http"
 	"rincon/config"
@@ -36,12 +34,7 @@ func RequestLogger() gin.HandlerFunc {
 }
 
 func MatchRoute(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "MatchRoute", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	var routeUrl = "/" + strings.ReplaceAll(c.Param("route"), "<->", "/")
-	span.SetAttributes(attribute.Key("route").String(routeUrl))
 	utils.SugarLogger.Infoln("Decoded route: " + routeUrl)
 
 	allRoutes := service.GetAllRoutes()
@@ -58,7 +51,6 @@ func MatchRoute(c *gin.Context) {
 			} else {
 				// Select a service instance from list
 				c.JSON(http.StatusOK, matchedServices[rand.Intn(len(matchedServices))])
-				span.SetAttributes(attribute.Key("service").String(allRoutes[i].ServiceName))
 				utils.SugarLogger.Infoln("Successfully mapped active service `" + allRoutes[i].ServiceName + "` to route `" + allRoutes[i].Route + "` for route `" + routeUrl + "`")
 				go service.Discord.ChannelMessageSend(config.DiscordChannel, "Successfully mapped active service `"+allRoutes[i].ServiceName+"` to route `"+allRoutes[i].Route+"` for route `"+routeUrl+"`")
 				return
@@ -72,21 +64,12 @@ func MatchRoute(c *gin.Context) {
 }
 
 func GetAllRoutes(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "GetAllRoutes", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	result := service.GetAllRoutes()
 	c.JSON(http.StatusOK, result)
 }
 
 func GetRoute(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "GetRoute", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	var r = "/" + strings.ReplaceAll(c.Param("route"), "<->", "/")
-	span.SetAttributes(attribute.Key("route").String(r))
 	result := service.GetRouteByID(r)
 	if result.Route != r {
 		c.JSON(http.StatusNotFound, gin.H{"message": "No route registered for " + r})
@@ -96,20 +79,11 @@ func GetRoute(c *gin.Context) {
 }
 
 func GetRoutesForService(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "GetRoutesForService", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
-	span.SetAttributes(attribute.Key("service").String(c.Param("name")))
 	result := service.GetRouteByService(c.Param("name"))
 	c.JSON(http.StatusOK, result)
 }
 
 func CreateRoute(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "CreateRoute", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	var input model.Route
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -123,10 +97,6 @@ func CreateRoute(c *gin.Context) {
 }
 
 func RemoveRoute(c *gin.Context) {
-	// Start tracing span
-	span := utils.BuildSpan(c.Request.Context(), "RemoveRoute", oteltrace.WithAttributes(attribute.Key("Request-ID").String(c.GetHeader("Request-ID"))))
-	defer span.End()
-
 	var r = "/" + strings.ReplaceAll(c.Param("route"), "<->", "/")
 	result := service.GetRouteByID(r)
 	if result.Route != r {

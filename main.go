@@ -16,7 +16,6 @@ func setupRouter() *gin.Engine {
 	}
 	r := gin.Default()
 	r.Use(controller.RequestLogger())
-	r.Use(utils.JaegerPropogator())
 	return r
 }
 
@@ -32,7 +31,6 @@ func main() {
 	if config.Env == "PROD" {
 		controller.RegisterStatusCronJob()
 	}
-	utils.InitializeJaeger()
 
 	controller.InitializeRoutes(router)
 	router.Run(":" + config.Port)
