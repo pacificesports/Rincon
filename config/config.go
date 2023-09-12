@@ -29,7 +29,6 @@ var EmailPassword = os.Getenv("EMAIL_PASSWORD")
 var DiscordToken = os.Getenv("DISCORD_TOKEN")
 var DiscordGuild = os.Getenv("DISCORD_GUILD")
 var DiscordChannel = os.Getenv("DISCORD_CHANNEL")
-var StatusChannel = os.Getenv("STATUS_CHANNEL")
 
 var StatusEmail = os.Getenv("STATUS_EMAIL")
 
