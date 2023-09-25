@@ -13,7 +13,7 @@ var Service = model.Service{
 	Version:     Version,
 }
 
-var Version = "2.1.6"
+var Version = "2.1.7"
 var Env = os.Getenv("ENV")
 var Port = os.Getenv("PORT")
 
